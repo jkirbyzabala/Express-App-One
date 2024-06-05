@@ -1,30 +1,28 @@
 const express = require('express');
-const path = require('path');
 const app = express();
 const port = 3000;
 
-// Middleware to serve static files from the 'public' directory
+// Serve static files from the 'public' directory
 app.use(express.static('public'));
 
-// Define your routes and other middleware here
+// Define your routes 
 app.get('/', (req, res) => {
-    const filePath = path.join(__dirname, 'public', 'index.html');
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            console.error('Error sending file:', err);
-            res.status(404).send('File not found');
-        }
-    });
+    res.sendFile(__dirname + '/public/index.html');
+});
+// Route handler for the 'about' page
+app.get('/about', (req, res) => {
+  res.render('about');
 });
 
-app.get('/about', (req, res) => {
-    const filePath = path.join(__dirname, 'public', 'about.html');
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            console.error('Error sending file:', err);
-            res.status(404).send('File not found');
-        }
-    });
+// Route handler for the 'user' page
+app.get('/user/:id', (req, res) => {
+  const userId = req.params.id;
+  res.render('user', { userId });
+});
+// Route for downloading the image
+app.get('/download', (req, res) => {
+    const imagePath = __dirname + '/public/Images/llama4.jpg';
+    res.download(imagePath, '/public/Images/llama4.jpg');
 });
 
 app.listen(port, () => {
